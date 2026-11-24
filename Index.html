@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ИИ для незрячих: обзор инструментов</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f4ef;--card:#fff;--tx:#17181c;--mut:#5a5e68;--ac:#0b5fff;--ac2:#e8f0ff;--ok:#0a7a3d;--bd:#d9d6cc;--hi:#ffd84d}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0f1115;--card:#1a1d24;--tx:#f1f2f5;--mut:#a3a8b5;--ac:#6ea0ff;--ac2:#1b2a4a;--ok:#4cd98a;--bd:#2b303b;--hi:#ffd84d}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0f1115;--card:#1a1d24;--tx:#f1f2f5;--mut:#a3a8b5;--ac:#6ea0ff;--ac2:#1b2a4a;--ok:#4cd98a;--bd:#2b303b;--hi:#ffd84d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);background-image:radial-gradient(circle at 8% 0%,rgba(11,95,255,.14),transparent 38%),radial-gradient(circle at 96% 35%,rgba(255,200,40,.16),transparent 34%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Cg fill='%23888' fill-opacity='.2'%3E%3Ccircle cx='10' cy='10' r='3'/%3E%3Ccircle cx='10' cy='24' r='3'/%3E%3Ccircle cx='24' cy='10' r='3'/%3E%3Ccircle cx='46' cy='46' r='3'/%3E%3Ccircle cx='60' cy='46' r='3'/%3E%3Ccircle cx='60' cy='60' r='3'/%3E%3C/g%3E%3C/svg%3E");background-attachment:fixed;color:var(--tx);font:18px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:12px;align-items:center;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--bd)}
+header b{flex:1;font-size:16px}
+.bar{height:4px;background:var(--bd)}.bar i{display:block;height:100%;width:0;background:var(--ac);transition:width .3s}
+button,.chip{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:8px 14px}
+button:hover{border-color:var(--ac)}
+button.pri{background:var(--ac);color:#fff;border-color:var(--ac)}
+.chip[aria-pressed="true"]{background:var(--ac);color:#fff;border-color:var(--ac)}
+main{max-width:1000px;margin:0 auto;padding:24px 16px 90px}
+.slide{display:none;animation:in .35s}.slide.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide{animation:none}}
+h1{font-size:clamp(34px,6vw,60px);line-height:1.1;margin:.2em 0}
+h2{font-size:clamp(26px,4vw,40px);margin:0 0 .4em}
+.mut{color:var(--mut)}
+.hero em{font-style:normal;background:var(--hi);color:#111;padding:0 .2em;border-radius:6px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px}
+.card h3{margin:.1em 0 .3em;font-size:19px}
+.big{font-size:40px;font-weight:800;color:var(--ac);line-height:1}
+.tag{display:inline-block;font-size:13px;padding:2px 9px;border-radius:99px;background:var(--ac2);color:var(--ac);margin:2px 4px 2px 0}
+.free{background:#d8f5e3;color:#0a5a2c}@media (prefers-color-scheme:dark){.free{background:#12361f;color:#4cd98a}}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.wrap{overflow-x:auto;border:1px solid var(--bd);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:760px;background:var(--card);font-size:15px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--bd);vertical-align:top}
+th button{all:unset;cursor:pointer;font-weight:700}th button:focus-visible{outline:3px solid var(--ac)}
+tr:last-child td{border-bottom:0}
+.meter{display:inline-block;width:70px;height:8px;background:var(--bd);border-radius:9px;overflow:hidden;vertical-align:middle}.meter i{display:block;height:100%;background:var(--ac)}
+.demo{background:var(--card);border:2px dashed var(--ac);border-radius:16px;padding:16px}
+.fake{background:var(--ac2);border-radius:10px;padding:12px;margin:10px 0;font-size:16px}
+.say{min-height:3em;font-weight:600;color:var(--ok)}
+.opt{display:block;width:100%;text-align:left;margin:6px 0}
+nav.dock{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--bd);display:flex;gap:10px;justify-content:center;align-items:center}
+.dots{display:flex;gap:6px}.dots button{width:14px;height:14px;padding:0;border-radius:50%}.dots button[aria-current="true"]{background:var(--ac);border-color:var(--ac)}
+.sk{position:absolute;left:-999px}.sk:focus{left:8px;top:8px;background:var(--hi);color:#111;padding:8px;z-index:9}
+small{color:var(--mut)}
+.ill{float:right;width:100px;margin:0 0 8px 14px;color:var(--ac);opacity:.9}.ill.big{width:min(250px,38%)}.ill svg{width:100%;height:auto;display:block}
+.braille{display:flex;flex-wrap:wrap;gap:8px;color:var(--ac);margin-top:10px}.braille svg{width:30px;height:44px}
+#bin{font:inherit;width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx)}
+.pipe{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}.pipe div{padding:10px 14px;border-radius:12px;border:2px solid var(--bd);background:var(--card);transition:.3s}.pipe div.hot{border-color:var(--ac);background:var(--ac2);transform:scale(1.06)}
+.bars div{display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap}.bars span{flex:1 1 220px}.bars i{display:block;height:20px;background:var(--ac);border-radius:6px;min-width:4px;transition:width .6s}.bars b{min-width:70px}
+.good{color:var(--ok)}.bad{color:#c62828}@media (prefers-color-scheme:dark){.bad{color:#ff8a80}}
+</style>
+</head>
+<body>
+<a class="sk" href="#main">Перейти к содержимому</a>
+<header><b>ИИ для незрячих</b>
+<button id="speak" aria-pressed="false" title="Озвучивать заголовки слайдов">🔊 Озвучка слайдов</button>
+<button id="theme" aria-label="Сменить тему">🌓</button></header>
+<div class="bar" aria-hidden="true"><i id="prog"></i></div>
+
+<main id="main" tabindex="-1">
+
+<section class="slide hero" aria-labelledby="t1">
+<p class="mut">Доклад · цифровая доступность</p>
+<h1 id="t1">Компьютер и интернет <em>без глаз</em>: как ИИ меняет жизнь незрячих</h1>
+<p>Какие сервисы и инструменты помогают слепым людям пользоваться телефоном, компьютером и сайтами — и чем они отличаются друг от друга.</p>
+<div class="grid" style="margin-top:22px">
+<div class="card"><div class="big">2,2 млрд</div>людей в мире с нарушениями зрения (оценка ВОЗ)</div>
+<div class="card"><div class="big">2023</div>год, когда GPT-4 с распознаванием фото пришёл в Be My Eyes</div>
+<div class="card"><div class="big">0 ₽</div>за основу: многие ключевые инструменты бесплатны</div>
+</div>
+<p class="mut" style="margin-top:18px">Стрелки ← → на клавиатуре или кнопки внизу — переключение слайдов.</p>
+</section>
+
+<section class="slide" aria-labelledby="t2">
+<h2 id="t2">Как незрячий «видит» сайт</h2>
+<p>Незрячий не смотрит на экран, а <b>слушает</b> его. Весь процесс держится на трёх шагах:</p>
+<div class="grid">
+<div class="card"><div class="big">1</div><h3>Скринридер читает</h3>Программа озвучивает заголовки, ссылки, кнопки и текст — вслух или на брайлевском дисплее.</div>
+<div class="card"><div class="big">2</div><h3>Клавиатура вместо мыши</h3>Человек прыгает по заголовкам и ссылкам горячими клавишами (на телефоне — жестами).</div>
+<div class="card"><div class="big">3</div><h3>ИИ закрывает пробелы</h3>Если у картинки или кнопки нет подписи, ИИ описывает её сам.</div>
+</div>
+<div class="demo">
+<b>Эксперимент: что слышит незрячий на этой странице</b>
+<p class="mut">Вот страница глазами зрячего: заголовок, схема, ссылка и кнопка. Незрячий этих картинок не видит — только слышит. Нажмите кнопку и послушайте разницу.</p>
+<div class="fake"><b style="font-size:20px">Расписание</b><div style="font-size:44px;margin:6px 0">🗺️</div><u>Скачать</u> &nbsp; <span class="tag">Отправить</span></div>
+<div class="row">
+<button class="pri" data-say="Заголовок первого уровня. Расписание. Ссылка. Скачать. Кнопка. Отправить. Изображение. Без описания.">▶ Без описания (плохо)</button>
+<button class="pri" data-say="Заголовок первого уровня. Расписание. Ссылка. Скачать. Кнопка. Отправить. Изображение. Схема корпуса, главный вход слева, аудитория 305 на третьем этаже.">▶ С описанием (хорошо)</button>
+<button data-stop>■ Стоп</button>
+</div>
+<label>Скорость речи: <input id="rate" type="range" min="0.7" max="2.5" step="0.1" value="1"> <output id="rv">1×</output></label>
+<p class="mut"><small>Опытные пользователи слушают в 2–3 раза быстрее обычной речи.</small></p>
+<p class="say" id="say" aria-live="polite"></p>
+<p><b>Вывод:</b> без описания схема — пустое место. Именно поэтому появились ИИ-сервисы, которые описывают картинки автоматически.</p>
+</div>
+</section>
+
+<section class="slide" aria-labelledby="n1">
+<h2 id="n1">Где интернет «ломается» для незрячих</h2>
+<p>Нажмите на барьер — узнаете, чем помогает ИИ. По данным Be My Eyes, 84,3% незрячих сотрудников сталкивались с недоступными документами.</p>
+<div class="row" id="bar"></div>
+<div class="card" id="barbody" aria-live="polite">Выберите барьер выше.</div>
+</section>
+
+<section class="slide" aria-labelledby="t3">
+<h2 id="t3">Четыре типа инструментов</h2>
+<div class="row" role="tablist" id="tabs"></div>
+<div class="card" id="tabbody" role="tabpanel" aria-live="polite"></div>
+</section>
+
+<section class="slide" aria-labelledby="n2">
+<h2 id="n2">Как ИИ описывает мир: от фото до голоса</h2>
+<p>Выберите «снимок» — и посмотрите путь: камера, ИИ-модель, текст, озвучка.</p>
+<div class="row" id="scenes"></div>
+<div class="pipe" aria-hidden="true"><div>📷 Фото</div>→<div>🧠 ИИ-модель</div>→<div>📝 Текст</div>→<div>🔊 Голос</div></div>
+<div class="card" id="scenebody" aria-live="polite">Выберите снимок.</div>
+<p><small>Примеры описаний написаны вручную для иллюстрации.</small></p>
+</section>
+
+<section class="slide" aria-labelledby="t4">
+<h2 id="t4">Сравнение: 15 инструментов</h2>
+<p class="mut">Фильтруйте и сортируйте. Цены ориентировочные — проверяйте на сайтах разработчиков.</p>
+<div class="row" id="filters" role="group" aria-label="Фильтры"></div>
+<div class="wrap"><table>
+<thead><tr>
+<th scope="col"><button data-k="name">Название ⇅</button></th>
+<th scope="col"><button data-k="type">Тип ⇅</button></th>
+<th scope="col"><button data-k="plat">Платформа ⇅</button></th>
+<th scope="col"><button data-k="paid">Цена ⇅</button></th>
+<th scope="col">Русский</th>
+<th scope="col"><button data-k="ai">Сила ИИ ⇅</button></th>
+<th scope="col"><button data-k="ease">Простота ⇅</button></th>
+<th scope="col">Суть</th></tr></thead>
+<tbody id="tb"></tbody></table></div>
+<p><small>Оценки «Сила ИИ» и «Простота» — субъективные, составлены автором обзора по описаниям и отзывам. «Русский»: ✓ поддерживается, ~ частично или зависит от языка модели, проверьте.</small></p>
+</section>
+
+<section class="slide" aria-labelledby="n3">
+<h2 id="n3">Сколько это стоит в год</h2>
+<p class="mut">Примерные суммы в долларах. Подписки считаны за 12 месяцев, очки — разовая покупка.</p>
+<div class="bars" id="cost"></div>
+<p><small>JAWS не включён: цена зависит от страны и типа лицензии. Бесплатный аналог — NVDA. Для ИИ-ассистентов указан платный тариф около 20 долларов в месяц.</small></p>
+</section>
+
+<section class="slide" aria-labelledby="n4">
+<h2 id="n4">Плюсы и минусы</h2>
+<div class="row" id="pc-sel" role="group" aria-label="Выбор инструмента"></div>
+<div class="grid" id="pc-body" aria-live="polite"></div>
+</section>
+
+<section class="slide" aria-labelledby="t5">
+<h2 id="t5">Что выбрать? Мини-подбор</h2>
+<div id="quiz"></div>
+</section>
+
+<section class="slide" aria-labelledby="n5">
+<h2 id="n5">Верить ИИ или проверять?</h2>
+<p>ИИ может ошибаться или «додумывать». Решите, как поступить в каждой ситуации.</p>
+<div id="trust"></div>
+</section>
+
+<section class="slide" aria-labelledby="n6">
+<h2 id="n6">Что дальше: вехи и тренды</h2>
+<div class="grid">
+<div class="card"><div class="big">2023</div>GPT-4 с распознаванием фото выходит с Be My Eyes в числе партнёров.</div>
+<div class="card"><div class="big">2024</div>Ray-Ban Meta получают режим для незрячих через Be My Eyes.</div>
+<div class="card"><div class="big">2026</div>Первые многострочные брайлевские дисплеи (10 строк) и новые очки вроде EchoVision.</div>
+<div class="card"><div class="big">→</div>ИИ внутри скринридеров, рабочие инструменты (Be My Eyes Workplace), больше языков.</div>
+</div>
+<p><small>Источник вех: обзор Disability World, 2026.</small></p>
+</section>
+
+<section class="slide" aria-labelledby="n7">
+<h2 id="n7">Попробуйте: ваше имя шрифтом Брайля</h2>
+<p>Шрифт Брайля — это ячейка из шести точек, из которых получается 63 комбинации. Каждая буква — свой рисунок из выпуклых точек. Введите слово по-русски:</p>
+<input id="bin" value="привет" aria-label="Текст для перевода в шрифт Брайля" autocomplete="off">
+<div id="bout" class="braille" role="img" aria-label="Результат"></div>
+<p class="mut"><small>Закрашенная точка — выпуклая. Незрячий читает такой текст кончиками пальцев или на брайлевском дисплее.</small></p>
+</section>
+
+<section class="slide" aria-labelledby="t6">
+<h2 id="t6">Выводы</h2>
+<div class="grid">
+<div class="card"><h3>1. Базу не заменить</h3>Скринридер (NVDA, JAWS, VoiceOver, TalkBack) остаётся основой. ИИ его дополняет.</div>
+<div class="card"><h3>2. Бесплатно — значит можно</h3>NVDA, Be My Eyes, Seeing AI, Lookout, встроенные VoiceOver и TalkBack закрывают большинство задач.</div>
+<div class="card"><h3>3. ИИ ошибается</h3>Описания фото могут быть неточными. Для лекарств, документов и денег нужна проверка — вторым инструментом или человеком.</div>
+<div class="card"><h3>4. Главный тренд</h3>Умные очки и голосовые ассистенты: видеть мир «по запросу», не доставая телефон.</div>
+</div>
+<h3 style="margin-top:22px">Источники и что проверить</h3>
+<p><small>Материалы: Disability World (обзор 2026), Augsburg University, Be My Eyes, Double Tap (цены JAWS), App Store (Ally: $9/мес, $90/год), Leader Dogs, BFIT-Bund. Цены и функции меняются — сверяйтесь с официальными сайтами перед рекомендацией.</small></p>
+<p style="font-size:26px;font-weight:700">Спасибо! Вопросы?</p>
+<div id="thx" class="braille"></div><small>«Спасибо» шрифтом Брайля</small>
+</section>
+</main>
+
+<nav class="dock" aria-label="Навигация по слайдам">
+<button id="prev" aria-label="Предыдущий слайд">← Назад</button>
+<div class="dots" id="dots"></div>
+<button id="next" class="pri" aria-label="Следующий слайд">Далее →</button>
+</nav>
+
+<script>
+(function(){
+var $=function(s,r){return (r||document).querySelector(s)};
+var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,speakOn=false;
+
+/* ---------- данные ---------- */
+var T=[
+{name:'Be My Eyes / Be My AI',type:'Описание мира',plat:'iOS, Android',paid:0,price:'Бесплатно',ru:'✓',ai:5,ease:5,tasks:['see','read'],os:['ios','and'],note:'ИИ описывает фото + видеозвонок добровольцам (185+ языков).'},
+{name:'Seeing AI (Microsoft)',type:'Описание мира',plat:'iOS',paid:0,price:'Бесплатно',ru:'✓',ai:4,ease:5,tasks:['see','read'],os:['ios'],note:'Читает текст, штрихкоды, валюту, лица, описывает сцены.'},
+{name:'Google Lookout',type:'Описание мира',plat:'Android',paid:0,price:'Бесплатно',ru:'~',ai:4,ease:4,tasks:['see','read'],os:['and'],note:'Камера распознаёт текст, предметы, еду, документы.'},
+{name:'Envision (приложение)',type:'Описание мира',plat:'iOS, Android',paid:0,price:'Бесплатно',ru:'✓',ai:4,ease:4,tasks:['read','see'],os:['ios','and'],note:'Быстрое чтение текста (OCR), описание, поддержка очков Envision.'},
+{name:'Envision Ally',type:'ИИ-ассистент',plat:'iOS, Android',paid:1,price:'Free + Pro $9/мес',ru:'✓',ai:5,ease:4,tasks:['see','read'],os:['ios','and'],note:'Диалоговый ассистент для слепых: спрашиваешь голосом о фото и документах.'},
+{name:'ChatGPT / Gemini / Claude',type:'ИИ-ассистент',plat:'Везде',paid:1,price:'Free; ~ $20/мес',ru:'✓',ai:5,ease:3,tasks:['pc','read','see'],os:['ios','and','win'],note:'Голосовой режим, анализ фото и документов, помощь с сайтами.'},
+{name:'NVDA',type:'Скринридер',plat:'Windows',paid:0,price:'Бесплатно',ru:'✓',ai:2,ease:3,tasks:['pc'],os:['win'],note:'Открытый скринридер № 1 для бесплатной работы на ПК.'},
+{name:'NVDA + AI Content Describer',type:'Расширение с ИИ',plat:'Windows',paid:0,price:'Бесплатно*',ru:'~',ai:4,ease:2,tasks:['pc','see'],os:['win'],note:'Описывает картинки и элементы интерфейса. *Нужен ключ ИИ-сервиса.'},
+{name:'JAWS (+ Picture Smart AI)',type:'Скринридер',plat:'Windows',paid:1,price:'Платно (подписка или лицензия)',ru:'✓',ai:4,ease:3,tasks:['pc','see'],os:['win'],note:'Профессиональный стандарт; ИИ-описания картинок и Page Explorer.'},
+{name:'VoiceOver (Apple)',type:'Скринридер',plat:'iPhone, Mac',paid:0,price:'Встроен',ru:'✓',ai:3,ease:4,tasks:['pc','see','read'],os:['ios','mac'],note:'Встроен в технику Apple, умеет описывать изображения.'},
+{name:'TalkBack (Android)',type:'Скринридер',plat:'Android',paid:0,price:'Встроен',ru:'✓',ai:4,ease:3,tasks:['pc','see'],os:['and'],note:'Встроен в Android; описывает картинки с помощью Gemini.'},
+{name:'Narrator (Windows)',type:'Скринридер',plat:'Windows',paid:0,price:'Встроен',ru:'✓',ai:2,ease:3,tasks:['pc'],os:['win'],note:'Бесплатный вариант «из коробки», хорош для старта.'},
+{name:'Ray-Ban Meta',type:'Умные очки',plat:'Очки + телефон',paid:1,price:'от $299',ru:'~',ai:4,ease:4,tasks:['see','nav'],os:['ios','and'],note:'Режим с Be My Eyes: описание вокруг и звонок волонтёру, руки свободны.'},
+{name:'EchoVision',type:'Умные очки',plat:'Очки',paid:1,price:'$599 + подписка ИИ',ru:'?',ai:4,ease:3,tasks:['see','nav'],os:['ios','and'],note:'Очки, созданные с участием слепых пользователей (планировались на 2026).'},
+{name:'Aira',type:'Человек + ИИ',plat:'iOS, Android',paid:1,price:'Бесплатные минуты + платные планы',ru:'~',ai:3,ease:4,tasks:['see','nav','read'],os:['ios','and'],note:'Профессиональные видеоассистенты — надёжнее волонтёров.'}
+];
+var CATS={
+'Описание мира':['Телефон как глаза','Наводишь камеру — приложение читает текст, находит предметы, описывает сцену и людей.','Be My Eyes, Seeing AI, Lookout, Envision'],
+'Скринридеры':['Основа работы на компьютере','Озвучивают интерфейс и сайты, работают с брайлевскими дисплеями. Новое: ИИ-расширения для описания картинок.','NVDA, JAWS, VoiceOver, TalkBack, Narrator'],
+'ИИ-ассистенты':['Разговор вместо кликов','Можно спросить голосом: «Что на этом графике?», «Как оформить форму на сайте?». Ассистент объяснит.','ChatGPT, Gemini, Claude, Envision Ally'],
+'Умные очки':['Руки свободны','Камера на очках + ИИ: описание окружения, чтение вывесок, видеозвонок помощнику.','Ray-Ban Meta, EchoVision, Envision Glasses']};
+
+/* ---------- навигация ---------- */
+var dots=$('#dots');
+slides.forEach(function(s,i){var b=document.createElement('button');b.setAttribute('aria-label','Слайд '+(i+1));b.onclick=function(){go(i)};dots.appendChild(b)});
+function say(t){if(!speakOn||!window.speechSynthesis)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='ru-RU';speechSynthesis.speak(u)}
+function go(n){cur=Math.max(0,Math.min(slides.length-1,n));
+slides.forEach(function(s,i){s.classList.toggle('on',i===cur)});
+[].forEach.call(dots.children,function(d,i){d.setAttribute('aria-current',i===cur)});
+$('#prog').style.width=((cur+1)/slides.length*100)+'%';
+$('#prev').disabled=cur===0;$('#next').disabled=cur===slides.length-1;
+try{history.replaceState(null,'','#s'+(cur+1))}catch(e){}
+window.scrollTo(0,0);var h=slides[cur].querySelector('h1,h2');if(h)say(h.textContent)}
+$('#prev').onclick=function(){go(cur-1)};$('#next').onclick=function(){go(cur+1)};
+document.addEventListener('keydown',function(e){if(/INPUT|TEXTAREA/.test(e.target.tagName))return;
+if(e.key==='ArrowRight'||e.key==='PageDown')go(cur+1);if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1)});
+$('#speak').onclick=function(){speakOn=!speakOn;this.setAttribute('aria-pressed',speakOn);if(!speakOn&&window.speechSynthesis)speechSynthesis.cancel();else say('Озвучка включена')};
+$('#theme').onclick=function(){var r=document.documentElement,d=r.getAttribute('data-theme')==='dark'||(!r.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme:dark)').matches);r.setAttribute('data-theme',d?'light':'dark')};
+
+/* ---------- демо речи ---------- */
+var rate=$('#rate');rate.oninput=function(){$('#rv').textContent=rate.value+'×'};
+[].forEach.call(document.querySelectorAll('[data-say]'),function(b){b.onclick=function(){
+$('#say').textContent='🔊 '+b.dataset.say;
+if(!window.speechSynthesis){$('#say').textContent+=' (озвучка не поддерживается браузером)';return}
+speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(b.dataset.say);u.lang='ru-RU';u.rate=+rate.value;speechSynthesis.speak(u)}});
+$('[data-stop]').onclick=function(){if(window.speechSynthesis)speechSynthesis.cancel()};
+
+/* ---------- вкладки ---------- */
+var tabs=$('#tabs'),first=true;
+Object.keys(CATS).forEach(function(k,i){var b=document.createElement('button');b.className='chip';b.setAttribute('role','tab');b.textContent=k;
+b.onclick=function(){[].forEach.call(tabs.children,function(c){c.setAttribute('aria-pressed',c===b);c.setAttribute('aria-selected',c===b)});
+var c=CATS[k];$('#tabbody').innerHTML='<h3>'+c[0]+'</h3><p>'+c[1]+'</p><p><b>Примеры:</b> '+c[2]+'</p>'};
+tabs.appendChild(b);if(i===0)b.click()});
+
+/* ---------- таблица ---------- */
+var f={free:false,type:''},sk='name',dir=1;
+var fl=$('#filters');
+function chip(t,fn){var b=document.createElement('button');b.className='chip';b.textContent=t;b.setAttribute('aria-pressed','false');b.onclick=function(){fn(b)};fl.appendChild(b);return b}
+chip('Только бесплатные',function(b){f.free=!f.free;b.setAttribute('aria-pressed',f.free);draw()});
+['Описание мира','Скринридер','ИИ-ассистент','Умные очки'].forEach(function(t){chip(t,function(b){f.type=f.type===t?'':t;[].forEach.call(fl.children,function(c,i){if(i)c.setAttribute('aria-pressed',c.textContent===f.type)});draw()})});
+[].forEach.call(document.querySelectorAll('th button'),function(b){b.onclick=function(){var k=b.dataset.k;dir=sk===k?-dir:1;sk=k;draw()}});
+function m(n){return '<span class="meter" role="img" aria-label="'+n+' из 5"><i style="width:'+n*20+'%"></i></span>'}
+function draw(){var r=T.filter(function(t){return (!f.free||!t.paid)&&(!f.type||t.type.indexOf(f.type)===0||(f.type==='Скринридер'&&t.type==='Скринридер'))});
+r.sort(function(a,b){var x=a[sk],y=b[sk];return (x>y?1:x<y?-1:0)*dir*((sk==='ai'||sk==='ease')?-1:1)});
+$('#tb').innerHTML=r.map(function(t){return '<tr><th scope="row">'+t.name+'</th><td>'+t.type+'</td><td>'+t.plat+'</td><td><span class="tag '+(t.paid?'':'free')+'">'+t.price+'</span></td><td>'+t.ru+'</td><td>'+m(t.ai)+'</td><td>'+m(t.ease)+'</td><td>'+t.note+'</td></tr>'}).join('')||'<tr><td colspan="8">Ничего не найдено</td></tr>'}
+draw();
+
+/* ---------- подбор ---------- */
+var Q=[['Какое у вас устройство?',[['iPhone','ios'],['Android','and'],['Windows-компьютер','win'],['Mac','mac']]],
+['Что с бюджетом?',[['Только бесплатное','0'],['Готов платить','1']]],
+['Главная задача?',[['Читать тексты и документы','read'],['Узнавать, что вокруг','see'],['Работать на компьютере','pc'],['Ориентироваться вне дома','nav']]]];
+var ans=[],qz=$('#quiz');
+function step(){if(ans.length===Q.length){res();return}
+var q=Q[ans.length];qz.innerHTML='<p class="mut">Вопрос '+(ans.length+1)+' из '+Q.length+'</p><h3>'+q[0]+'</h3>';
+q[1].forEach(function(o){var b=document.createElement('button');b.className='opt';b.textContent=o[0];b.onclick=function(){ans.push(o[1]);step()};qz.appendChild(b)});
+var h=qz.querySelector('h3');h.tabIndex=-1;h.focus({preventScroll:true})}
+function res(){var s=T.map(function(t){var p=0;if(t.os.indexOf(ans[0])>-1)p+=3;if(ans[1]==='0'&&t.paid)p-=3;if(t.tasks.indexOf(ans[2])>-1)p+=3;p+=t.ai*.3+t.ease*.2;return[p,t]}).sort(function(a,b){return b[0]-a[0]}).slice(0,3);
+qz.innerHTML='<h3 tabindex="-1" id="rh">Вам подойдут:</h3><div class="grid">'+s.map(function(x){return '<div class="card"><h3>'+x[1].name+'</h3><span class="tag '+(x[1].paid?'':'free')+'">'+x[1].price+'</span><p>'+x[1].note+'</p></div>'}).join('')+'</div><p><button id="again">↺ Пройти заново</button></p>';
+$('#again').onclick=function(){ans=[];step()};$('#rh').focus({preventScroll:true})}
+step();
+
+/* барьеры */
+var BR=[['🖼️','Картинки без описания','Скринридер говорит только «изображение». ИИ создаёт описание сам.'],['🔐','Визуальная капча','Блокирует вход. ИИ или волонтёр могут помочь, но лучше аудиокапча.'],['📄','PDF-сканы','Документ — это картинка. OCR в Seeing AI, Envision и Lookout превращает его в текст.'],['🔘','Кнопки без подписи','ИИ-расширения скринридеров угадывают назначение элемента.'],['📊','Графики и схемы','ИИ пересказывает тренд, но числа стоит перепроверить.']];
+BR.forEach(function(b){var x=document.createElement('button');x.className='chip';x.setAttribute('aria-pressed','false');x.textContent=b[0]+' '+b[1];x.onclick=function(){[].forEach.call($('#bar').children,function(c){c.setAttribute('aria-pressed',c===x)});$('#barbody').innerHTML='<h3>'+b[1]+'</h3><p>'+b[2]+'</p>'};$('#bar').appendChild(x)});
+/* сцены */
+var SC=[['🍝','Ужин','На белой тарелке спагетти с красным томатным соусом, сверху листья базилика и тёртый сыр. Вилка справа.'],['🚏','Остановка','Автобусная остановка с навесом. На табло маршрут 24, прибытие через 3 минуты. Рядом никого нет.'],['💊','Упаковка','Белая коробка, надпись «Парацетамол 500 мг», 20 таблеток. Срок годности мелким шрифтом прочитан не полностью.'],['📈','График','Линия растёт с января по июнь с 10 до 40, в апреле небольшой спад.']];
+var pt=[];
+SC.forEach(function(s){var x=document.createElement('button');x.className='chip';x.setAttribute('aria-pressed','false');x.textContent=s[0]+' '+s[1];x.onclick=function(){[].forEach.call($('#scenes').children,function(c){c.setAttribute('aria-pressed',c===x)});pt.forEach(clearTimeout);pt=[];var ds=document.querySelectorAll('.pipe div');[].forEach.call(ds,function(d){d.classList.remove('hot')});$('#scenebody').textContent='…';[].forEach.call(ds,function(d,i){pt.push(setTimeout(function(){[].forEach.call(ds,function(e){e.classList.remove('hot')});d.classList.add('hot');if(i===2)$('#scenebody').innerHTML='<b>'+s[1]+':</b> '+s[2];if(i===3)say(s[2])},i*600))})};$('#scenes').appendChild(x)});
+/* цены */
+var CO=[['Бесплатно: NVDA, Be My Eyes, Seeing AI, Lookout, VoiceOver, TalkBack',0],['Envision Ally Pro (в год)',90],['ChatGPT/Gemini платный (~ в год)',240],['Ray-Ban Meta (разово, от)',299],['EchoVision (разово, без подписки ИИ)',599]];
+$('#cost').innerHTML=CO.map(function(c){return '<div><span>'+c[0]+'</span><i style="width:'+Math.max(c[1]/600*45,0.5)+'%"></i><b>'+(c[1]?'$'+c[1]:'$0')+'</b></div>'}).join('');
+/* плюсы и минусы */
+var PC={'Be My Eyes':[['Бесплатно','ИИ и живые добровольцы в одном приложении','185+ языков волонтёров'],['Добровольцы не всегда сразу свободны','Видеозвонок раскрывает приватную обстановку']],'Seeing AI':[['Бесплатно','Много режимов: текст, штрихкоды, валюта, лица'],['Основной упор на iOS','Нужна камера в руках']],'NVDA':[['Бесплатный и открытый','Работает с брайлевскими дисплеями','Есть расширения с ИИ'],['Только Windows','ИИ-функции требуют настройки и ключа']],'JAWS':[['Очень мощный','Picture Smart AI, Page Explorer','Стандарт на работе'],['Дорогой','Запутанные лицензии']],'Ray-Ban Meta':[['Руки свободны','Выглядят как обычные очки'],['От $299','Нужен интернет','Не все языки и страны']],'ChatGPT / Gemini / Claude':[['Универсальны, можно говорить голосом','Помогают с сайтами и документами'],['Не специализированы для слепых','Могут ошибаться','Лучшие функции платные']]};
+var ps=$('#pc-sel');Object.keys(PC).forEach(function(k,i){var x=document.createElement('button');x.className='chip';x.setAttribute('aria-pressed','false');x.textContent=k;x.onclick=function(){[].forEach.call(ps.children,function(c){c.setAttribute('aria-pressed',c===x)});var d=PC[k];$('#pc-body').innerHTML='<div class="card"><h3 class="good">＋ Плюсы</h3><ul>'+d[0].map(function(t){return '<li>'+t+'</li>'}).join('')+'</ul></div><div class="card"><h3 class="bad">− Минусы</h3><ul>'+d[1].map(function(t){return '<li>'+t+'</li>'}).join('')+'</ul></div>'};ps.appendChild(x);if(!i)x.click()});
+/* доверие */
+var TR=[['Лекарство: что написано на упаковке?','p','Проверять: ошибка в дозировке опасна. Уточните у фармацевта или близкого.'],['Какого цвета футболка?','v','Можно доверять: ошибка не критична.'],['Сумма и сроки в договоре','p','Проверять: цифры важны. Сверьте вторым инструментом или с человеком.'],['Что в меню кафе?','v','Можно доверять, но цены и аллергены лучше уточнить у официанта.']];
+var tr=$('#trust');TR.forEach(function(t){var d=document.createElement('div');d.className='card';d.style.margin='10px 0';d.innerHTML='<b>'+t[0]+'</b><div class="row"><button>Верю ИИ</button><button>Проверю</button></div><p aria-live="polite" class="mut"></p>';var bs=d.querySelectorAll('button'),p=d.querySelector('p');[['v',0],['p',1]].forEach(function(o){bs[o[1]].onclick=function(){p.innerHTML=(o[0]===t[1]?'✅ Верно. ':'⚠️ Не совсем. ')+t[2]}});tr.appendChild(d)});
+/* иллюстрации */
+var P='<svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+var IC={
+phone:P+'<rect x="30" y="10" width="52" height="100" rx="10"/><circle cx="56" cy="40" r="10"/><circle cx="56" cy="40" r="3" fill="currentColor"/><path d="M44 80h24M44 92h14"/><path d="M94 36q10 14 0 28M104 26q16 24 0 48" stroke-opacity=".55"/></svg>',
+speaker:P+'<path d="M16 48h18l26-22v68L34 72H16z"/><path d="M74 44q12 16 0 32M86 32q20 28 0 56M98 20q26 40 0 80" stroke-opacity=".6"/></svg>',
+glasses:P+'<circle cx="34" cy="58" r="21"/><circle cx="86" cy="58" r="21"/><path d="M55 56q5-6 10 0M13 54L5 40M107 54l8-14"/><path d="M38 98q22 14 44 0M30 110q30 14 60 0" stroke-opacity=".5"/></svg>',
+laptop:P+'<rect x="20" y="18" width="80" height="54" rx="6"/><path d="M8 84h104"/><g fill="currentColor" stroke="none"><circle cx="32" cy="100" r="4"/><circle cx="46" cy="100" r="4"/><circle cx="74" cy="100" r="4"/><circle cx="88" cy="100" r="4"/></g></svg>',
+cane:P+'<path d="M82 10q22 0 22 20v4M104 34L34 108"/><circle cx="32" cy="110" r="4" fill="currentColor"/><path d="M10 114h100" stroke-opacity=".5"/></svg>',
+braille:P+'<rect x="30" y="16" width="60" height="88" rx="14"/><g fill="currentColor" stroke="none"><circle cx="48" cy="36" r="7"/><circle cx="72" cy="60" r="7"/><circle cx="48" cy="84" r="7"/></g><g stroke-opacity=".35"><circle cx="72" cy="36" r="7"/><circle cx="48" cy="60" r="7"/><circle cx="72" cy="84" r="7"/></g></svg>',
+shield:P+'<path d="M60 10l38 14v30c0 26-16 44-38 54C38 98 22 80 22 54V24z"/><path d="M42 58l14 14 24-28"/></svg>'};
+var MAP={t2:'speaker',n1:'cane',t3:'glasses',n2:'phone',t4:'laptop',n3:'braille',n5:'shield',n6:'glasses',n7:'braille',t6:'braille'};
+Object.keys(MAP).forEach(function(id){var s=document.querySelector('section[aria-labelledby="'+id+'"]');if(s)s.insertAdjacentHTML('afterbegin','<div class="ill">'+IC[MAP[id]]+'</div>')});
+slides[0].insertAdjacentHTML('afterbegin','<div class="ill big">'+IC.phone+'</div>');
+/* брайль */
+var BD={'а':'1','б':'12','в':'2456','г':'1245','д':'145','е':'15','ё':'16','ж':'245','з':'1356','и':'24','й':'12346','к':'13','л':'123','м':'134','н':'1345','о':'135','п':'1234','р':'1235','с':'234','т':'2345','у':'136','ф':'124','х':'125','ц':'14','ч':'12345','ш':'156','щ':'1346','ъ':'12356','ы':'2346','ь':'23456','э':'345','ю':'1256','я':'1246'};
+function braille(t,el){el.innerHTML=t.toLowerCase().split('').map(function(ch){if(ch===' ')return '<span style="width:18px"></span>';var d=BD[ch];if(!d)return '';var s='<svg viewBox="0 0 30 44" role="img" aria-label="'+ch+'">';for(var n=1;n<=6;n++){var c=n<=3?0:1,r=(n-1)%3;s+='<circle cx="'+(8+c*14)+'" cy="'+(8+r*14)+'" r="5" '+(d.indexOf(n)>-1?'fill="currentColor"':'fill="none" stroke="currentColor" stroke-opacity=".3"')+'/>'}return s+'</svg>'}).join('')}
+braille('спасибо',$('#thx'));
+$('#bin').oninput=function(){braille(this.value.slice(0,16),$('#bout'))};braille('привет',$('#bout'));
+var m0=/^#s(\d+)$/.exec(location.hash);go(m0?+m0[1]-1:0);
+})();
+</script>
+</body>
+</html>
